@@ -1,40 +1,29 @@
-#pragma once
+#if !defined(_NODOLISTA_H)
+#define _NODOLISTA_H
 
 #include "CLista.h"
 
-// Forward declaration of templated class
-// this way we avoid a circular dependency problem
-template <class T> class CLista;
+// Declaración anticipada de CLista:
+// ...
 
-template <class T>
-class CNodoLista {
-    friend CLista<T>;
-
+template<class T>
+class CNodoLista
+{
+  friend class CLista<T>;
 private:
-    T m_Dato;
-    CNodoLista<T>* m_pSigNodo;
-
+  T m_Dato;
+  CNodoLista<T> * m_pSigNodo;
 public:
-    CNodoLista() { this->m_pSigNodo = nullptr; };
-    CNodoLista(const T& obj, CNodoLista<T>* pNodo = nullptr) : m_Dato{ obj } {
-        this->m_pSigNodo = pNodo;
-    };
-    CNodoLista(const CNodoLista<T>& NodoLista) {
-        this->m_Dato = T{ NodoLista.m_Dato };
-        this->m_pSigNodo = nullptr;
-    };
+  CNodoLista() { m_pSigNodo = NULL; }
+  CNodoLista(const CNodoLista<T>& NodoLista);
+  CNodoLista(const T& Obj, CNodoLista<T> *pNodo = NULL);
+  CNodoLista<T>& operator=(const CNodoLista<T>& NodoLista);
+  CNodoLista<T> *GetSigNodo() const { return m_pSigNodo; }
+  T& GetDato() { return m_Dato; }
+  void SetSigNodo(CNodoLista<T> *pNodo) { m_pSigNodo = pNodo; }
+  ~CNodoLista() {
+      this->m_pSigNodo = nullptr;
+  };
+};
 
-    inline CNodoLista<T>* GetSigNodo() const { return this->m_pSigNodo; };
-    inline void SetSigNodo(CNodoLista<T>* pNodo) { this->m_pSigNodo = pNodo; };
-    T& GetDato() { return m_Dato; };
-
-    CNodoLista<T>& operator=(const CNodoLista<T>& NodoLista) {
-        this->m_Dato = T{ NodoLista.m_Dato };
-
-        return *this;
-    };
-
-    ~CNodoLista() {
-        this->m_pSigNodo = nullptr;
-    };
-}; 
+#endif

@@ -1,45 +1,27 @@
-#pragma once
+#if !defined (C_UTILS_H_)
+#define _CUTILS_H_
 
-#include "types.h"
-#include <iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<iostream>
+#include<limits>
+#include<string>
+#include"MemoryManager.h"
 
-enum class Menu { other };
+using namespace std;
 
-namespace utils {
-	enum class MenuOps1 {
-		EnterEmploy = 1,
-		EnterClient = 2,
-		FindByName = 3,
-		ShowReg = 4,
-		ShowEmploy = 5,
-		MakeCopy = 6,
-		RestoreCopy = 7,
-		Exit = 8,
-		other
-	};
-	enum MenuOps2 {
-		predeterminada = 1,
-		param1 = 2,
-		param2 = 3,
-		param3 = 4,
-		param4 = 5,
-		ret
-	};
+namespace utils
+{
+	class CUtils
+	{
 
-	class CUtils {
 	public:
-		static int CrearMenu(const char* const opciones_menu[], int num_opciones);
-		static MenuOps2 LeerEntrada2();
-		static MenuOps1 LeerEntrada1();
-		static bool LeerInt(int*);
-		static bool LeerCadena(char* c, int n);
-		static bool LeerString(std::string& s);
-		static char* ConverMayus(char* str);
-		static bool LeerUInt(uint32* ret);
-
-		static std::string& ConverMayus(std::string& str);
-
-		static void clear();
-		static void pause();
+		static bool LeerDato(int& dato); //bool LeerDato(int& dato)
+		static bool LeerDato(float& dato); //bool LeerDato(float& dato)
+		static int CrearMenu(const char* opciones_menu[], int num_opciones);
+		//void LeerCadena(char* c, int n); //bool LeerDato(string& dato)
+		static bool LeerDato(string& dato); //bool LeerDato(char* dato, int n) 
+		static string& ConverMayus(string& str);
 	};
-} // namespace utils
+};
+#endif 

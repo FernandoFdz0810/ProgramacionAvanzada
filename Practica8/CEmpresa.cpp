@@ -1,28 +1,71 @@
 #include "CEmpresa.h"
-#include "CCliente.h"
-#include <fstream>
-#include <iostream>
-#include <iterator>
-#include <sstream>
-#include <streambuf>
-#include <string>
-#include <vector>
 
-using namespace std;
+template<class T>
+CEmpresa<T>::CEmpresa(const CEmpresa<T> &a) {
+	*this = a;
+}
 
-namespace cempresa {
-    void from_file(CEmpresa<CCliente>& empresa, const string& path) {
-        ifstream file{ path };
-        string str{
-          istreambuf_iterator<char>{file}, istreambuf_iterator<char> {}
-        };
-
-        istringstream iss{ str };
-        vector<string> clients{ istream_iterator<string>{iss},
-                               istream_iterator<string>{} };
-
-        for (auto& client_name : clients) {
-            empresa.AgregarElemento(CCliente(client_name));
-        }
+template <class T>
+CEmpresa<T>::CEmpresa(const CEmpresa& a)
+{
+    m_nElem = a.m_nElem;
+    m_pElem = new T[m_nElem];
+    for (int i = 0; i < m_nElem; i++)
+    {
+        m_pElem[i] = a.m_pElem[i];
     }
 }
+
+template <class T>
+CEmpresa<T>& CEmpresa<T>::operator=(const CEmpresa& a)
+{
+    if (this == &a)
+        return *this;
+
+    delete[] m_pElem;
+
+    m_nElem = a.m_nElem;
+    m_pElem = new T[m_nElem];
+    for (int i = 0; i < m_nElem; i++)
+    {
+        m_pElem[i] = a.m_pElem[i];
+    }
+
+    return *this;
+}
+
+template <class T>
+CEmpresa<T>::~CEmpresa()
+{
+    delete[] m_pElem;
+}
+
+template <class T>
+void CEmpresa<T>::AgregarElemento(const T& elem)
+{
+    T* newArray = new T[m_nElem + 1];
+    for (int i = 0; i < m_nElem; i++)
+    {
+        newArray[i] = m_pElem[i];
+    }
+    newArray[m_nElem] = elem;
+
+    delete[] m_pElem;
+    m_pElem = newArray;
+    m_nElem++;
+}
+
+template <class T>
+T& CEmpresa<T>::GetElemento(int nElem) const
+{   
+    if(nElem < 0 || nElem >= m_nElem)
+		throw std::out_of_range("Indice fuera de rango")
+    return m_pElem[nElem];
+}
+
+template <class T>
+T& CEmpresa<T>::operator[](int nElem) const
+{
+    return m_pElem[nElem];
+}
+

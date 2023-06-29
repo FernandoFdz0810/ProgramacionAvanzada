@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(_SINIESTROURGENTE_H)
+#define _SINIESTROURGENTE_H
 
 #include "CSiniestro.h"
 #include <iostream>
@@ -6,27 +7,30 @@
 
 using namespace std;
 
-enum class TSituacion {
-    local, nacional, internacional
+enum TSituacion
+{
+  local, nacional, internacional
 };
 
-class CSiniestroUrgente : public CSiniestro {
+class CSiniestroUrgente : public CSiniestro
+{
 private:
-    TSituacion m_Situacion;
-    static float m_Recargo;
-    static float m_CosteHoraMO;
+  TSituacion m_Situacion;
+  static float m_Recargo;
+  static float m_CosteHoraMO;
 
 public:
-    CSiniestroUrgente(TSituacion s, const string& Desc = "Sin Descripción");
+  CSiniestroUrgente(TSituacion s, const std::string& Desc = "Sin Descripcion");
 
-    void Presupuestar(float Horas = 0.5f, float Piezas = 0) override;
-    void Mostrar(ostream& os = cout) const override;
-    CSiniestroUrgente* Clonar() const override;
-    float GetPresupuesto() const override;
+  void Presupuestar(float Horas = 0.5f, float Piezas = 0);
+  void Mostrar(std::ostream & os = std::cout) const;
+  CSiniestroUrgente* Clonar() const;
+  float GetPresupuesto() const;
 
-    ~CSiniestroUrgente() override;
+  ~CSiniestroUrgente();
 
-    friend ostream& operator<<(ostream& os, const CSiniestroUrgente& sin);
+  friend ostream& operator<<(ostream& os, const CSiniestro& sin);
 };
 
-ostream& operator<<(ostream& os, const TSituacion& s);
+ostream& operator<<(ostream& os, const TSituacion &s);
+#endif

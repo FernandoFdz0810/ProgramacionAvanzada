@@ -1,206 +1,117 @@
 #include "utils.h"
-#include "types.h"
-#include <iostream>
-#include <istream>
-#include <string>
 
-namespace utils {
-    /**
-     * Limpia la pantalla
-     */
-    void CUtils::clear() {
-#ifdef __unix__
-        std::cout << "\x1B[2J\x1B[H";
-#else
-        std::system("cls");
-#endif
-    }
+using namespace utils;		//se introduce en namespace
 
-    /**
-     * Pausa hasta que se pulsa enter
-     */
-    void CUtils::pause() {
-        std::cin.clear();
+bool CUtils::LeerDato(int& dato)
+{
+	cin.exceptions(ios::failbit | ios::badbit);
 
-        std::cout << "Presiona enter para continuar...";
-        std::cin.get();
+	try
+	{
+		cin >> dato;
+		cin.ignore(numeric_limits<int>::max(), '\n'); //eliminar 'n
+		cin.exceptions(ios::goodbit);
+		return true;
+	}
+	catch (ios_base::failure& e)
+	{
+		if (cin.eof())
+		{
+			cin.clear();
+			return false;
+		}
+		else
+		{
+			cout << e.what() << "\n El dato introducido no es correcto, vuelva a introducirlo: ";
+			cin.clear();
+			cin.ignore(numeric_limits<int>::max(), '\n'); //eliminar 'n
+			return LeerDato(dato);
+		}
+	}
+}
 
-        // Para prevenir que los enter introducidos anteriormente interfieran con
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
+bool CUtils::LeerDato(float& dato)	//Igual
+{
+	cin.exceptions(ios::failbit | ios::badbit);
 
-    /**
-     * Given a number of strings prints them in a menu
-     */
-    int CUtils::CrearMenu(const char* const opciones_menu[], int num_opciones) {
-        for (uint8_t i = 0; i < num_opciones; i++)
-            std::cout << " " << i + 1 << ". " << opciones_menu[i] << std::endl;
+	try
+	{
+		cin >> dato;
+		cin.ignore(numeric_limits<int>::max(), '\n'); //eliminar 'n
+		cin.exceptions(ios::goodbit);
+		return true;
+	}
+	catch (ios_base::failure& e)
+	{
+		if (cin.eof())
+		{
+			cin.clear();
+			return false;
+		}
+		else
+		{
+			cout << e.what() << "\n El dato introducido no es correcto, vuelva a introducirlo: ";
+			cin.clear();
+			cin.ignore(numeric_limits<int>::max(), '\n'); //eliminar 'n
+			return LeerDato(dato);
+		}
+	}
+}
 
-        return 0;
-    }
+int CUtils::CrearMenu(const char *opciones_menu[], int num_opciones)
+{
+	int opcion = 0;
+	system("cls"); // limpiar la pantalla
+	// Presentar el menú
+	printf("\n Menu:\n\n");
+	for (int i = 0; i < num_opciones; i++)
+		cout << "\t" << i + 1 << ". " << opciones_menu[i] << endl;
+	do
+	{
+		cout << ">> "; //opcion = LeerDato(opcion);
+		//	if (opcion < 1 || opcion > num_opciones)	//Check
+		//	{
+		//		cout << " ERROR: Esta opcion no existe. \n" << endl;
+		//		system("pause");
+		//		return 0;
+		//	}
+	} while ((opcion < 1 || opcion > num_opciones) && LeerDato(opcion) == false);
+	//} while (opcion < 1 || opcion > num_opciones);
+	return opcion;
+}
 
-    // template <typename T>
-    // inline T CUtils::LeerEntrada() {
-    //   uint8_t a;
-    //   T ret;
-    //   auto buffer = std::string{};
+bool CUtils::LeerDato(string& dato)
+{
+	cin.exceptions(ios::failbit | ios::badbit);
 
-    //   std::cout << std::endl << "propmt> ";
-    //   std::cin >> buffer;
+	try
+	{
+		getline(cin, dato);
+		cin.exceptions(ios::goodbit);
+		return true;
+	}
+	catch (ios_base::failure& e)
+	{
+		if (cin.eof())
+		{
+			cin.clear();
+			return false;
+		}
+		else
+		{
+			cout << e.what() << "\n El dato introducido no es correcto, vuelva a introducirlo: ";
+			cin.clear();
+			return LeerDato(dato);
+		}
+	}
+}
 
-    //   try {
-    //     a = std::stoi(buffer);
-    //     ret = static_cast<T>(a);
-    //   } catch (std::exception &e) {
-    //     ret = static_cast<T>(0);
-    //   }
+string& CUtils::ConverMayus(string& str)
+{
+	int unsigned i;
 
-    //   return ret;
-    // }
+	for (i = 0; i < str.size(); i++)
+		str[i] = toupper(str.at(i));
 
-    bool CUtils::LeerUInt(uint32* ret) {
-        uint32 a;
-        auto buffer = std::string{};
-
-        if (ret == NULL) {
-            return false;
-        }
-
-        std::cin >> buffer;
-        if (std::cin.eof()) {
-            return false;
-        }
-
-        try {
-            a = std::stoul(buffer);
-        }
-        catch (std::exception& e) {
-            *ret = 0;
-            return false;
-        }
-
-        *ret = a;
-
-        // Clear input buffer
-        std::cin.sync();
-
-        return true;
-    }
-
-    bool CUtils::LeerInt(int* ret) {
-        uint8_t a;
-        auto buffer = std::string{};
-
-        if (ret == NULL) {
-            return false;
-        }
-
-        std::cin >> buffer;
-        if (std::cin.eof()) {
-            return false;
-        }
-
-        try {
-            a = std::stoi(buffer);
-        }
-        catch (std::exception& e) {
-            *ret = 0;
-            return false;
-        }
-
-        *ret = a;
-
-        // Clear input buffer
-        std::cin.sync();
-
-        return true;
-    }
-
-    bool CUtils::LeerCadena(char* c, int n) {
-        if (c == NULL) {
-            return false;
-        }
-
-        // Discard all whitespace
-        std::cin >> std::ws;
-
-        // std::cin.exceptions(std::ios::failbit | std::ios::badbit);
-        // std::cin.clear();
-        try {
-            std::cin.getline(c, n, '\n');
-            if (std::cin.eof()) {
-                return false;
-            }
-            // std::cin.exceptions(std::ios::goodbit);
-        }
-        catch (std::exception& e) {
-            std::cout << "Something bad happened: " << e.what() << std::endl;
-        }
-
-        // Clear input buffer
-        std::cin.sync();
-
-        return true;
-    }
-
-    bool CUtils::LeerString(std::string& s) {
-        // Discard all whitespace
-        std::cin >> std::ws;
-
-        // std::cin.exceptions(std::ios::failbit | std::ios::badbit);
-        // std::cin.clear();
-        try {
-            std::getline(std::cin, s);
-            if (std::cin.eof()) {
-                return false;
-            }
-            // std::cin.exceptions(std::ios::goodbit);
-        }
-        catch (std::exception& e) {
-            std::cout << "Something bad happened: " << e.what() << std::endl;
-        }
-
-        // Clear input buffer
-        std::cin.sync();
-
-        return true;
-    }
-
-    MenuOps2 CUtils::LeerEntrada2() {
-        uint8_t a;
-        utils::MenuOps2 ret;
-        auto buffer = std::string{};
-
-        std::cout << std::endl << "propmt> ";
-        std::cin >> buffer;
-
-        try {
-            a = std::stoi(buffer);
-            ret = static_cast<utils::MenuOps2>(a);
-        }
-        catch (std::exception& e) {
-            ret = utils::MenuOps2::ret;
-        }
-
-        return ret;
-    }
-
-    MenuOps1 CUtils::LeerEntrada1() {
-        uint8_t a;
-        utils::MenuOps1 ret;
-        auto buffer = std::string{};
-
-        std::cout << std::endl << "propmt> ";
-        std::cin >> buffer;
-
-        try {
-            a = std::stoi(buffer);
-            ret = static_cast<utils::MenuOps1>(a);
-        }
-        catch (std::exception& e) {
-            ret = utils::MenuOps1::other;
-        }
-
-        return ret;
-    }
-} // namespace utils
+	return str;
+}

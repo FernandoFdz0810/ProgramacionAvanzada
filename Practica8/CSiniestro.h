@@ -1,32 +1,30 @@
-#pragma once
+#if !defined(_SINIESTRO_H)
+#define _SINIESTRO_H
 
 #include <iostream>
 #include <string>
 
-using namespace std;
-
-class CSiniestro {
+class CSiniestro
+{
 private:
-    int m_Codigo;
-    static int m_SigCodigo;
-
+  int m_Codigo;
+  static int m_SigCodigo;
 protected:
-    string m_Descripcion;
-    float m_HorasMO;
-    float m_CostePiezas;
-    float m_Coste;
-
+  std::string m_Descripcion;
+  float m_HorasMO;
+  float m_CostePiezas;
+  float m_Coste; // PREGUNTA 7
 public:
-    CSiniestro(const string& Desc = "Sin Descripción")
-        : m_Descripcion{ Desc }, m_Codigo{ ++this->m_SigCodigo } {};
+	CSiniestro(const std::string& Desc = "Sin Descripcion"); 
+	//m_Codigo{ ++this->m_SigCodigo } {};
+  virtual ~CSiniestro() {};
 
-    virtual float GetPresupuesto() const = 0;
-    inline int GetCodigo() const { return m_Codigo; };
-    inline float GetCoste() const { return m_Coste; };
-
-    virtual void Presupuestar(float Horas, float Piezas) = 0;
-    virtual void Mostrar(ostream& os = cout) const = 0;
-    virtual CSiniestro* Clonar() const = 0;
-
-    virtual ~CSiniestro() {};
+  virtual float GetPresupuesto() const = 0;
+  int GetCodigo() const { return m_Codigo; }
+  float GetCoste() const { return m_Coste; } // PREGUNTA 7
+  virtual void Presupuestar(float Horas, float Piezas) = 0;
+  virtual void Mostrar(std::ostream& os = std::cout) const; // PREGUNTA 12
+  virtual CSiniestro* Clonar() const = 0;
 };
+
+#endif

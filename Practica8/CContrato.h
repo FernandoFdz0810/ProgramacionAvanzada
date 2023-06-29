@@ -1,50 +1,48 @@
-#pragma once
+#if !defined(_CONTRATO_H)
+#define _CONTRATO_H
 
-#include "CLista.h"
-#include "CSiniestro.h"
 #include <iostream>
 #include <string>
+#include "CSiniestro.h"
+#include "CSiniestroUrgente.h"
+#include "CSiniestroNormal.h"
+#include "CLista.h"
 
-using namespace std;
-
-class CContrato {
+class CContrato 
+{
+friend ostream& operator<<(ostream& os,  CContrato& c);
 private:
-    int    m_NumSerie;
-    string m_Descripcion;
-    string m_FechaFin;
-    long   m_Poliza;
-    long   m_ValorCompra;
-    CLista<CSiniestro*> m_Siniestros;
+  int m_NumSerie;							
+  std::string m_Descripcion;
+  std::string m_FechaFin;
+  long m_Poliza;
+  long m_ValorCompra;
+  CLista<CSiniestro *> m_Siniestros;
 
 public:
-    CContrato(int NumSerie, const string& Desc = "", const string& FF = "",
-        long Poliza = 0, long ValorCompra = 0)
-        : m_NumSerie(NumSerie), m_Descripcion(Desc), m_FechaFin(FF),
-        m_Poliza(Poliza), m_ValorCompra(ValorCompra) {
-        this->m_Siniestros = CLista<CSiniestro*>{};
-    };
-    CContrato(const CContrato& c)
-        : m_NumSerie(c.m_NumSerie), m_Descripcion(c.m_Descripcion), m_FechaFin(c.m_FechaFin),
-        m_Poliza(c.m_Poliza), m_ValorCompra(c.m_ValorCompra), m_Siniestros(c.m_Siniestros) {};
+  CContrato(int NumSerie, const std::string& Desc="", const std::string& FF="",
+    long Poliza = 0, long ValorCompra = 0);
 
-    inline void SetNumSerie(int ns) { m_NumSerie = ns; }
-    inline void SetDescripcion(const string& d) { m_Descripcion = d; }
-    inline void SetFechaFin(const string& ff) { m_FechaFin = ff; }
-    inline void SetPoliza(long p) { m_Poliza = p; }
-    inline void SetValorCom(long vc) { m_ValorCompra = vc; }
+  CContrato(const CContrato& c);
+  CContrato& operator=(const CContrato &c);
+  ~CContrato();
 
-    inline int GetNumSerie() const { return m_NumSerie; }
-    inline string GetDescripcion() const { return m_Descripcion; }
-    inline string GetFechaFin() const { return m_FechaFin; }
-    inline long GetPoliza() const { return m_Poliza; }
-    inline long GetValorCom() const { return m_ValorCompra; }
+  void SetNumSerie(int ns) { m_NumSerie = ns; }
+  void SetDescripcion(const std::string& d) { m_Descripcion = d; }
+  void SetFechaFin(const std::string& ff) { m_FechaFin = ff; }
+  void SetPoliza(long p) { m_Poliza = p; }
+  void SetValorCom(long vc) { m_ValorCompra = vc; }
 
-    void AgregarSiniestro(CSiniestro& s);
-    void MostrarSiniestros(ostream& os = cout);
-
-    CContrato& operator=(const CContrato& c);
-
-    friend ostream& operator<<(ostream& os, CContrato& c);
-
-    ~CContrato();
+  int GetNumSerie() const { return m_NumSerie; }
+  std::string GetDescripcion() const { return m_Descripcion; }
+  std::string GetFechaFin() const { return m_FechaFin; }
+  long GetPoliza() const { return m_Poliza; }
+  long GetValorCom() const { return m_ValorCompra; }
+  void AgregarSiniestro(const CSiniestro & s);
+  void MostrarSiniestros(std::ostream& os = std::cout);
+  void BorrarSiniestros();
+  
+  friend std::ostream& operator<<(std::ostream& os,  CContrato& c);
 };
+
+#endif

@@ -1,24 +1,31 @@
-#pragma once
+#if !defined(_CLIENTE_H)
+#define _CLIENTE_H
 
+#include <string>
+#include <iostream>
 #include "CLista.h"
 #include "CContrato.h"
-#include <string>
 
 using namespace std;
 
-class CCliente {
-protected:
-    string m_Nombre;
-    CLista<CContrato> m_Contratos;
+class CCliente 
+{
+private:
+  std::string m_Nombre;
+  CLista<CContrato> m_Contratos;
+
 public:
-    CCliente(const string& Nom = "Sin Nombre") : m_Nombre{ Nom },
-        m_Contratos{ CContrato{0} } {}
-    CCliente(const string& Nom, const CContrato& c);
-    inline void SetNombre(const string& Nom) { this->m_Nombre = Nom; };
-    inline string GetNombre() const { return this->m_Nombre; };
-    CCliente& AgregarContrato(const CContrato& c);
+  CCliente(const std::string& Nom="Sin Nombre") : m_Nombre(Nom) {};
+  CCliente(const std::string& Nom, const CContrato& c);
 
-    operator long() const;
+  void SetNombre(const std::string& Nom) {m_Nombre = Nom; }
+  std::string GetNombre() const { return m_Nombre; }
+  CCliente& AgregarContrato(const CContrato& c);
+  CLista<CContrato> GetContratos() const { return m_Contratos; }
 
-    friend ostream& operator<<(ostream& os, CCliente& c);
+  operator long() const;
+
+  friend ostream& operator<<(ostream& os, CCliente& c);
 };
+
+#endif
